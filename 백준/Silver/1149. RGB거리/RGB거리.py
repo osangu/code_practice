@@ -1,38 +1,11 @@
-from sys import stdin
+n = int(input())
+costs = [list(map(int, input().split())) for _ in range(n)]
 
-input = stdin.readline
+mem = costs[0].copy()
+for i in range(1, n):
+    last_mem = mem.copy()
+    mem[0] = costs[i][0] + min(last_mem[1], last_mem[2])
+    mem[1] = costs[i][1] + min(last_mem[0], last_mem[2])
+    mem[2] = costs[i][2] + min(last_mem[0], last_mem[1])
 
-N = int(input())
-
-table = [
-    list(map(lambda x: [int(x)], input().split()))
-    for i in range(N)
-]
-
-for i in range(1, N):
-    for j in range(3):
-        if j == 0:
-            add = min(
-                table[i - 1][1][0],
-                table[i - 1][2][0]
-            )
-            table[i][j][0] += add
-            continue
-
-        elif j == 1:
-            add = min(
-                table[i - 1][0][0],
-                table[i - 1][2][0]
-            )
-            table[i][j][0] += add
-            continue
-
-        elif j == 2:
-            add = min(
-                table[i - 1][0][0],
-                table[i - 1][1][0]
-            )
-            table[i][j][0] += add
-            continue
-
-print(min(*table[N - 1])[0])
+print(min(mem))
